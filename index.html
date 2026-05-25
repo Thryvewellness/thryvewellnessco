@@ -367,10 +367,12 @@ footer{background:var(--ink);padding:40px 48px;display:flex;flex-direction:colum
       <p class="aff-sample-text" id="dailyAff">You are not what happened to you. You are what you choose to become.</p>
       <p class="aff-sample-ref" id="dailyVerse">"I can do all things through Christ who strengthens me." · Phil 4:13</p>
     </div>
-  
-    <div class="success-msg" id="affSuccess">
-      <p>You are on the list. Your first affirmation arrives tomorrow morning at 7AM. ✨</p>
-    
+    <div style="background:rgba(255,255,255,0.03);border:.5px solid rgba(184,200,224,0.1);border-left:2px solid var(--ve);padding:24px 28px;margin:28px auto;max-width:480px;text-align:center;">
+      <p style="font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:var(--silver2);margin-bottom:10px;letter-spacing:.06em;"><div style="background:rgba(255,255,255,0.03);border:.5px solid rgba(184,200,224,0.1);border-left:2px solid var(--ve);padding:24px 28px;margin:28px auto;max-width:480px;text-align:center;">       <p style="font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:var(--silver2);margin-bottom:10px;letter-spacing:.06em;">Text Me Daily</p>       <p style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:17px;color:rgba(184,200,224,0.55);margin-bottom:10px;">Text <strong style="color:var(--ve);font-style:normal;">THRYVE</strong> to <strong style="color:var(--ve);font-style:normal;">646-631-2868</strong></p>       <p style="font-size:10px;color:rgba(184,200,224,0.28);letter-spacing:.1em;text-transform:uppercase;">Free Always · Texts Start Friday · 7AM Daily</p>     </div></p>
+      <p style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:17px;color:rgba(184,200,224,0.55);margin-bottom:10px;">Text <strong style="color:var(--ve);font-style:normal;">THRYVE</strong> to <strong style="color:var(--ve);font-style:normal;">646-631-2868</strong></p>
+      <p style="font-size:10px;color:rgba(184,200,224,0.28);letter-spacing:.1em;text-transform:uppercase;">Free Always · Texts Start Friday · 7AM Daily</p>
+    </div>
+  </div>
 </section>
 
 <!-- PDF PURCHASE BOX -->
@@ -640,14 +642,7 @@ function rotateAff(){
 }
 setInterval(rotateAff,5000);
 
-// AFFIRMATION SIGNUP
-function signupAff(){
-  var phone=document.getElementById('affPhone').value.trim();
-  if(!phone){document.getElementById('affPhone').focus();return;}
-  document.getElementById('affPhone').value='';
-  document.getElementById('affSuccess').style.display='block';
-  setTimeout(function(){document.getElementById('affSuccess').style.display='none';},5000);
-}
+// AFFIRMATION SIGNUP handled by SimpleTexting · Text THRYVE to 646-631-2868
 
 // WAITLIST SIGNUP
 function signupWaitlist(){
