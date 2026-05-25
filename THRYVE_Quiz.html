@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>THRYVE — Is This Journal For You?</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Jost',sans-serif;background:#0D0D0D;color:#FAF6EF;min-height:100vh;overflow-x:hidden;}
+
+/* GRAIN */
+body::before{content:'';position:fixed;inset:0;z-index:9999;pointer-events:none;
+background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='0.04'/%3E%3C/svg%3E");opacity:.45;}
+
+/* PORTAL */
+#portal{position:fixed;inset:0;z-index:100;background:#0D0D0D;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .9s ease,visibility .9s ease;}
+#portal.gone{opacity:0;visibility:hidden;pointer-events:none;}
+.p-glow{position:absolute;width:380px;height:380px;border-radius:50%;background:radial-gradient(circle,#0D0D0D 26%,rgba(13,13,13,0.86) 52%,transparent 72%);pointer-events:none;z-index:1;}
+.gate{position:relative;width:168px;height:226px;display:flex;align-items:center;justify-content:center;cursor:pointer;margin-bottom:1.25rem;z-index:3;}
+.gate-content{position:relative;z-index:2;text-align:center;padding-bottom:2rem;}
+.gate-logo{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;letter-spacing:.2em;line-height:1;margin-bottom:3px;color:#6878A0;}
+.gate-logo .ve{color:#C8D8F0;}
+.gate-rule{width:20px;height:.5px;background:#B8C8E0;opacity:.3;margin:7px auto;}
+.gate-sub{font-size:7px;letter-spacing:.26em;text-transform:uppercase;color:#4A5878;opacity:.75;}
+.gate-prompt{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px;color:#4A5878;opacity:.7;cursor:pointer;z-index:3;position:relative;animation:pFade 2.5s ease-in-out infinite;}
+@keyframes pFade{0%,100%{opacity:.45}50%{opacity:.85}}
+.gate.opening{animation:gExpand .85s cubic-bezier(.4,0,.2,1) forwards;}
+@keyframes gExpand{0%{transform:scale(1);opacity:1;}55%{transform:scale(1.15);opacity:.8;}100%{transform:scale(8);opacity:0;}}
+
+/* QUIZ WRAPPER */
+#quiz{opacity:0;transition:opacity .8s ease .25s;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 24px;}
+#quiz.show{opacity:1;}
+
+.quiz-inner{max-width:580px;width:100%;text-align:center;}
+
+/* PROGRESS */
+.progress-bar{width:100%;height:2px;background:rgba(184,200,224,0.1);margin-bottom:48px;border-radius:2px;}
+.progress-fill{height:100%;background:linear-gradient(to right,#4A5878,#C8D8F0);border-radius:2px;transition:width .5s ease;}
+
+/* QUESTION */
+.q-screen{display:none;animation:fadeIn .5s ease;}
+.q-screen.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.q-num{font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:#C8D8F0;opacity:.5;margin-bottom:16px;}
+.q-text{font-family:'Playfair Display',serif;font-size:clamp(22px,4vw,36px);font-weight:700;color:#D8E4F0;line-height:1.2;margin-bottom:10px;}
+.q-text em{color:#C8D8F0;font-style:italic;}
+.q-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:16px;color:rgba(184,200,224,0.42);margin-bottom:40px;line-height:1.7;}
+.options{display:flex;flex-direction:column;gap:12px;margin-bottom:32px;}
+.option{
+  background:rgba(255,255,255,0.03);
+  border:.5px solid rgba(184,200,224,0.12);
+  padding:18px 24px;
+  cursor:pointer;
+  text-align:left;
+  transition:all .2s;
+  position:relative;
+  overflow:hidden;
+}
+.option:hover{background:rgba(184,200,224,0.06);border-color:rgba(184,200,224,0.25);}
+.option.selected{background:rgba(200,216,240,0.08);border-color:#C8D8F0;}
+.option-letter{font-size:10px;letter-spacing:.14em;color:#4A5878;margin-bottom:4px;font-family:'Jost',sans-serif;text-transform:uppercase;}
+.option-text{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:16px;color:#D8E4F0;line-height:1.6;}
+.next-btn{
+  background:transparent;
+  border:.5px solid rgba(184,200,224,0.2);
+  color:#B8C8E0;
+  padding:14px 32px;
+  font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+  font-family:'Jost',sans-serif;font-weight:500;
+  cursor:pointer;transition:all .2s;
+  display:none;
+}
+.next-btn.show{display:inline-block;}
+.next-btn:hover{background:rgba(184,200,224,0.06);border-color:#B8C8E0;}
+
+/* RESULT SCREENS */
+.result-screen{display:none;animation:fadeIn .6s ease;}
+.result-screen.active{display:block;}
+.result-icon{font-size:48px;margin-bottom:24px;}
+.result-eye{font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:#C8D8F0;opacity:.5;margin-bottom:14px;}
+.result-title{font-family:'Playfair Display',serif;font-size:clamp(28px,5vw,52px);font-weight:700;color:#D8E4F0;line-height:1;margin-bottom:16px;}
+.result-title em{color:#C8D8F0;font-style:italic;}
+.result-body{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:17px;color:rgba(184,200,224,0.55);line-height:1.85;max-width:480px;margin:0 auto 32px;}
+.rule{height:.5px;background:linear-gradient(to right,transparent,rgba(184,200,224,0.3),transparent);margin:24px auto;max-width:60px;}
+.scripture{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px;color:rgba(200,216,240,0.55);margin-bottom:32px;line-height:1.7;}
+.cta-btn{
+  background:#C8D8F0;color:#1A1F2E;
+  padding:16px 36px;border:none;cursor:pointer;
+  font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  font-family:'Jost',sans-serif;font-weight:500;
+  transition:all .2s;display:inline-block;text-decoration:none;
+  margin-bottom:12px;
+}
+.cta-btn:hover{background:#D8E4F0;}
+.cta-secondary{font-size:11px;color:rgba(184,200,224,0.3);font-family:'Cormorant Garamond',serif;font-style:italic;display:block;margin-top:8px;cursor:pointer;}
+.cta-secondary:hover{color:rgba(184,200,224,0.5);}
+
+/* LOGO TOP */
+.quiz-logo{position:fixed;top:20px;left:50%;transform:translateX(-50%);font-family:'Playfair Display',serif;font-size:16px;font-weight:700;letter-spacing:.2em;color:#4A5878;z-index:50;opacity:0;transition:opacity .8s ease .5s;}
+.quiz-logo.show{opacity:1;}
+.quiz-logo .ve{color:#C8D8F0;}
+
+@media(max-width:600px){
+  #quiz{padding:60px 20px;}
+  .option{padding:14px 18px;}
+}
+</style>
+</head>
+<body>
+
+<!-- PORTAL -->
+<div id="portal">
+  <div class="p-glow"></div>
+  <div class="gate" id="gate" onclick="openPortal()">
+    <svg style="position:absolute;inset:0;" viewBox="0 0 168 226" fill="none">
+      <path d="M 9 226 L 9 84 Q 9 9 84 9 Q 159 9 159 84 L 159 226" stroke="#252B3A" stroke-width="1.2" opacity=".8"/>
+      <path d="M 18 226 L 18 86 Q 18 20 84 20 Q 150 20 150 86 L 150 226" stroke="#B8C8E0" stroke-width="0.8" id="archS"/>
+      <path d="M 27 226 L 27 88 Q 27 31 84 31 Q 141 31 141 88 L 141 226" stroke="#D8E4F0" stroke-width="0.3" opacity=".16"/>
+      <path d="M 84 5 L 89 10 L 84 15 L 79 10 Z" fill="#B8C8E0" opacity=".58"/>
+    </svg>
+    <div class="gate-content">
+      <p class="gate-logo">THRY<span class="ve">VE</span></p>
+      <div class="gate-rule"></div>
+      <p class="gate-sub">Athletics</p>
+    </div>
+  </div>
+  <p class="gate-prompt" onclick="openPortal()">Find out if this journal is for you.</p>
+</div>
+
+<!-- QUIZ LOGO -->
+<div class="quiz-logo" id="quizLogo">THRY<span class="ve">VE</span></div>
+
+<!-- QUIZ -->
+<div id="quiz">
+<div class="quiz-inner">
+
+  <!-- PROGRESS BAR -->
+  <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+
+  <!-- Q1 -->
+  <div class="q-screen active" id="q1">
+    <p class="q-num">Question 1 of 4</p>
+    <h2 class="q-text">Who is showing up<br/>for this work <em>today?</em></h2>
+    <p class="q-sub">This journal was built for every person. We just want to know who you are.</p>
+    <div class="options">
+      <div class="option" onclick="select(1,'a')">
+        <p class="option-letter">A</p>
+        <p class="option-text">A woman ready to stop carrying everything alone.</p>
+      </div>
+      <div class="option" onclick="select(1,'b')">
+        <p class="option-letter">B</p>
+        <p class="option-text">A man who has never been given permission to feel it.</p>
+      </div>
+      <div class="option" onclick="select(1,'c')">
+        <p class="option-letter">C</p>
+        <p class="option-text">Someone who does not fit a box — just a person who needs this.</p>
+      </div>
+    </div>
+    <button class="next-btn" id="next1" onclick="nextQ(1)">Continue →</button>
+  </div>
+
+  <!-- Q2 -->
+  <div class="q-screen" id="q2">
+    <p class="q-num">Question 2 of 4</p>
+    <h2 class="q-text">Is there something you are carrying that you have <em>never</em> said out loud?</h2>
+    <p class="q-sub">Something that lives in the back of your mind at 3AM.</p>
+    <div class="options">
+      <div class="option" onclick="select(2,'a')">
+        <p class="option-letter">A</p>
+        <p class="option-text">Yes. Something I have never told anyone.</p>
+      </div>
+      <div class="option" onclick="select(2,'b')">
+        <p class="option-letter">B</p>
+        <p class="option-text">A few things. I carry a lot.</p>
+      </div>
+      <div class="option" onclick="select(2,'c')">
+        <p class="option-letter">C</p>
+        <p class="option-text">I have been working through it but there is still more.</p>
+      </div>
+    </div>
+    <button class="next-btn" id="next2" onclick="nextQ(2)">Continue →</button>
+  </div>
+
+  <!-- Q3 -->
+  <div class="q-screen" id="q3">
+    <p class="q-num">Question 3 of 4</p>
+    <h2 class="q-text">How do you feel about the person you are <em>becoming?</em></h2>
+    <p class="q-sub">Honest answers only.</p>
+    <div class="options">
+      <div class="option" onclick="select(3,'a')">
+        <p class="option-letter">A</p>
+        <p class="option-text">I do not know who that person is yet.</p>
+      </div>
+      <div class="option" onclick="select(3,'b')">
+        <p class="option-letter">B</p>
+        <p class="option-text">I can see that version of me but I do not know how to get there.</p>
+      </div>
+      <div class="option" onclick="select(3,'c')">
+        <p class="option-letter">C</p>
+        <p class="option-text">I am already on the way. I just need support.</p>
+      </div>
+    </div>
+    <button class="next-btn" id="next3" onclick="nextQ(3)">Continue →</button>
+  </div>
+
+  <!-- Q4 -->
+  <div class="q-screen" id="q4">
+    <p class="q-num">Question 4 of 4</p>
+    <h2 class="q-text">Are you ready to do the work — even when it is <em>uncomfortable?</em></h2>
+    <p class="q-sub">This is the only question that matters.</p>
+    <div class="options">
+      <div class="option" onclick="select(4,'a')">
+        <p class="option-letter">A</p>
+        <p class="option-text">Yes. I have been waiting for something like this.</p>
+      </div>
+      <div class="option" onclick="select(4,'b')">
+        <p class="option-letter">B</p>
+        <p class="option-text">I am scared but I know I need to.</p>
+      </div>
+      <div class="option" onclick="select(4,'c')">
+        <p class="option-letter">C</p>
+        <p class="option-text">I am not sure yet. I want to learn more first.</p>
+      </div>
+    </div>
+    <button class="next-btn" id="next4" onclick="showResult()">See My Result →</button>
+  </div>
+
+  <!-- RESULT — READY -->
+  <div class="result-screen" id="result-ready">
+    <p class="result-eye">Your result</p>
+    <h2 class="result-title">This journal was<br/>built <em>for you.</em></h2>
+    <div class="rule"></div>
+    <p class="result-body">You are carrying something real. You have been showing up for everyone else and quietly putting yourself last. You know there is a version of you waiting on the other side of the work — and you are ready to meet them. This journal is the map.</p>
+    <p class="scripture">"Before I formed you in the womb I knew you." · Jeremiah 1:5</p>
+    <div class="rule"></div>
+    <a class="cta-btn" href="https://thryvewellnessco.com" id="ctaReady">Enter THRYVE →</a>
+    <span class="cta-secondary" onclick="window.location.href='https://thryvewellnessco.com'">View the journal · thryvewellnessco.com</span>
+  </div>
+
+  <!-- RESULT — ALMOST -->
+  <div class="result-screen" id="result-almost">
+    <p class="result-eye">Your result</p>
+    <h2 class="result-title">You are closer<br/>than you <em>think.</em></h2>
+    <div class="rule"></div>
+    <p class="result-body">You are not sure you are ready — but the fact that you answered these questions honestly says everything. Readiness is not a feeling. It is a decision. The 30-day PDF preview is the perfect place to start. No commitment. Just the first thirty days.</p>
+    <p class="scripture">"I can do all things through Christ who strengthens me." · Philippians 4:13</p>
+    <div class="rule"></div>
+    <a class="cta-btn" href="https://thryvewellnessco.com" id="ctaAlmost">Start with the Preview →</a>
+    <span class="cta-secondary" onclick="window.location.href='https://thryvewellnessco.com'">Learn more · thryvewellnessco.com</span>
+  </div>
+
+  <!-- RESULT — NOT YET -->
+  <div class="result-screen" id="result-notyet">
+    <p class="result-eye">Your result</p>
+    <h2 class="result-title">The door is<br/><em>open.</em></h2>
+    <div class="rule"></div>
+    <p class="result-body">You may not be ready for the full 90 days right now — and that is okay. Healing has its own timeline. Come inside. Join the morning affirmations. Let THRYVE meet you where you are. The journal will be here when you are ready.</p>
+    <p class="scripture">"He heals the brokenhearted and binds up their wounds." · Psalm 147:3</p>
+    <div class="rule"></div>
+    <a class="cta-btn" href="https://thryvewellnessco.com" id="ctaNotyet">Come Inside →</a>
+    <span class="cta-secondary" onclick="window.location.href='https://thryvewellnessco.com'">Join the affirmation texts · Free</span>
+  </div>
+
+</div>
+</div>
+
+<script>
+// ARCH PULSE
+var st=document.createElement('style');
+st.textContent='#archS{animation:silP 3s ease-in-out infinite;}@keyframes silP{0%,100%{opacity:.3}50%{opacity:.62}}';
+document.head.appendChild(st);
+
+var answers = {};
+
+function openPortal(){
+  var gate=document.getElementById('gate');
+  var portal=document.getElementById('portal');
+  var quiz=document.getElementById('quiz');
+  var logo=document.getElementById('quizLogo');
+  gate.classList.add('opening');
+  setTimeout(function(){
+    portal.classList.add('gone');
+    quiz.classList.add('show');
+    logo.classList.add('show');
+    updateProgress(1);
+  },800);
+}
+
+function select(qNum, answer){
+  answers[qNum] = answer;
+  // clear selections
+  var opts = document.querySelectorAll('#q'+qNum+' .option');
+  opts.forEach(function(o){o.classList.remove('selected');});
+  // select clicked
+  event.currentTarget.classList.add('selected');
+  // show next button
+  var btn = document.getElementById('next'+qNum);
+  btn.classList.add('show');
+}
+
+function nextQ(current){
+  var currentScreen = document.getElementById('q'+current);
+  var nextScreen = document.getElementById('q'+(current+1));
+  currentScreen.classList.remove('active');
+  nextScreen.classList.add('active');
+  updateProgress(current+1);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function updateProgress(q){
+  var pct = ((q-1)/4)*100;
+  document.getElementById('progressFill').style.width = pct + '%';
+}
+
+function showResult(){
+  // score the answers
+  var score = 0;
+  // Q1 gender — all paths valid, slight score
+  score += 1;
+  // Q2 — a=2, b=2, c=1
+  if(answers[2]==='a') score+=2;
+  else if(answers[2]==='b') score+=2;
+  else score+=1;
+  // Q3 — a=1, b=2, c=1
+  if(answers[3]==='b') score+=2;
+  else score+=1;
+  // Q4 — a=3, b=2, c=0
+  if(answers[4]==='a') score+=3;
+  else if(answers[4]==='b') score+=2;
+
+  // hide q4
+  document.getElementById('q4').classList.remove('active');
+  document.getElementById('progressFill').style.width='100%';
+
+  // show result
+  setTimeout(function(){
+    var resultId;
+    if(score >= 6) resultId = 'result-ready';
+    else if(score >= 4) resultId = 'result-almost';
+    else resultId = 'result-notyet';
+    document.getElementById(resultId).classList.add('active');
+    window.scrollTo({top:0,behavior:'smooth'});
+  },300);
+}
+</script>
+</body>
+</html>
