@@ -471,14 +471,11 @@ footer{background:var(--ink);padding:40px 48px;display:flex;flex-direction:colum
   <div class="cs-badge"><span class="cs-dot"></span><span>Coming · July 18th 2026</span></div>
   <h2 class="cs-title">Reserve your<br/><em>copy.</em></h2>
   <p class="cs-sub">"Those on the list shall be the first to receive it — 24 hours before the public. Your place is being held."</p>
-  <div class="cs-form">
-    <input class="cs-input" type="text" placeholder="Your first name" id="wlName"/>
-    <input class="cs-input" type="email" placeholder="Your email address" id="wlEmail"/>
-    <button class="cs-btn" onclick="signupWaitlist()">Join the List →</button>
-  </div>
-  <div class="success-msg" id="wlSuccess" style="margin-top:12px;">
-    <p>You are on the list. First access — 24 hours before the public. Welcome to THRYVE. ✨</p>
-  </div>
+ <form action="https://formspree.io/f/xykvdqkb" method="POST" style="display:flex;gap:8px;max-width:420px;margin:0 auto;flex-wrap:wrap;">
+  <input class="cs-input" type="text" name="name" placeholder="Your first name" required/>
+  <input class="cs-input" type="email" name="email" placeholder="Your email address" required/>
+  <button type="submit" class="cs-btn">Join the List →</button>
+</form>
   <p class="cs-note">First access · 24 hours before the public · Always free to join</p>
 </section>
 
