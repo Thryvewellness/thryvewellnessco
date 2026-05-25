@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>THRYVE Wellness — The Healing Journal</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=IM+Fell+English:ital@0;1&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --oat:#F5EDD8;--parch:#EDE0C4;
+  --blush:#E8C0BE;--rose:#C9939A;
+  --sage:#5A8A50;--sage2:#8FAF8A;
+  --cream:#FAF6EF;--warm:#7B4F35;
+  --frost:#1A1F2E;--frost2:#252B3A;
+  --silver:#B8C8E0;--silver2:#D8E4F0;
+  --thry:#6878A0;--ve:#C8D8F0;
+  --deep:#4A5878;--ink:#080610;
+  --gold:#C8960A;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Jost',sans-serif;background:var(--oat);color:#2A1208;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;z-index:9999;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='0.04'/%3E%3C/svg%3E");opacity:.45;}
+
+/* ── PORTAL ── */
+#portal{position:fixed;inset:0;z-index:1000;background:#0D0D0D;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .9s ease,visibility .9s ease;overflow:hidden;}
+#portal.gone{opacity:0;visibility:hidden;pointer-events:none;}
+.aff-wall{position:absolute;inset:0;pointer-events:none;overflow:hidden;}
+.aff-wall span{position:absolute;font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--deep);}
+.p-glow{position:absolute;width:380px;height:380px;border-radius:50%;background:radial-gradient(circle,#0D0D0D 26%,rgba(13,13,13,0.86) 52%,transparent 72%);pointer-events:none;z-index:1;}
+.p-glow2{position:absolute;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(184,200,224,0.06) 0%,transparent 65%);pointer-events:none;z-index:2;}
+.gate{position:relative;width:168px;height:226px;display:flex;align-items:center;justify-content:center;cursor:pointer;margin-bottom:1.25rem;z-index:3;}
+.gate-content{position:relative;z-index:2;text-align:center;padding-bottom:2rem;}
+.gate-logo{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;letter-spacing:.2em;line-height:1;margin-bottom:3px;color:var(--thry);}
+.gate-logo .ve{color:var(--ve);}
+.gate-rule{width:20px;height:.5px;background:var(--silver);opacity:.3;margin:7px auto;}
+.gate-sub{font-size:7px;letter-spacing:.26em;text-transform:uppercase;color:var(--deep);opacity:.75;}
+.gate-prompt{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px;color:var(--deep);opacity:.7;cursor:pointer;z-index:3;position:relative;animation:pFade 2.5s ease-in-out infinite;}
+@keyframes pFade{0%,100%{opacity:.45}50%{opacity:.85}}
+.gate.opening{animation:gExpand .85s cubic-bezier(.4,0,.2,1) forwards;}
+@keyframes gExpand{0%{transform:scale(1);opacity:1;}55%{transform:scale(1.15);opacity:.8;}100%{transform:scale(8);opacity:0;}}
+
+/* ── SITE ── */
+#site{opacity:0;transition:opacity .8s ease .25s;}
+#site.show{opacity:1;}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content:space-between;align-items:center;padding:16px 48px;background:rgba(245,237,216,0.93);backdrop-filter:blur(16px);border-bottom:.5px solid rgba(90,138,80,0.12);}
+.nav-logo{font-family:'Playfair Display',serif;font-size:19px;letter-spacing:.2em;color:#2A1208;}
+.nav-logo .ve{color:var(--thry);}
+.nav-links{display:flex;gap:28px;}
+.nav-links a{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(42,18,8,.35);text-decoration:none;transition:color .2s;}
+.nav-links a:hover{color:var(--sage);}
+.nav-cta{font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:9px 20px;background:var(--frost);color:var(--silver);border:none;cursor:pointer;font-family:'Jost',sans-serif;font-weight:500;transition:all .2s;}
+.nav-cta:hover{background:var(--deep);color:var(--ve);}
+
+/* ── HERO ── */
+.hero{min-height:100vh;background:var(--frost);display:flex;flex-direction:column;justify-content:center;padding:120px 48px 80px;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;bottom:-100px;left:-100px;width:700px;height:700px;background:radial-gradient(ellipse,rgba(74,88,120,0.14) 0%,transparent 65%);pointer-events:none;}
+.hero-inner{max-width:600px;position:relative;z-index:2;}
+.h-eye{font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--silver);opacity:.5;margin-bottom:18px;animation:rU .7s .3s both;}
+.h-title{font-family:'Playfair Display',serif;font-size:clamp(42px,6.5vw,90px);font-weight:700;line-height:.92;color:var(--silver2);margin-bottom:20px;animation:rU .7s .5s both;}
+.h-title em{color:var(--ve);font-style:italic;}
+.h-body{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:17px;line-height:1.9;color:rgba(184,200,224,0.42);max-width:460px;margin-bottom:32px;animation:rU .7s .7s both;}
+.h-body em{color:var(--blush);font-style:normal;}
+.h-ctas{display:flex;gap:12px;flex-wrap:wrap;animation:rU .7s .9s both;}
+@keyframes rU{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
+.btn-silver{background:var(--silver);color:var(--frost);font-size:11px;letter-spacing:.14em;text-transform:uppercase;padding:14px 28px;border:none;cursor:pointer;font-family:'Jost',sans-serif;font-weight:500;transition:all .2s;}
+.btn-silver:hover{background:var(--ve);}
+.btn-ghost{background:transparent;color:var(--silver);font-size:11px;letter-spacing:.14em;text-transform:uppercase;padding:14px 28px;border:.5px solid rgba(184,200,224,0.18);cursor:pointer;font-family:'Jost',sans-serif;transition:all .2s;}
+.btn-ghost:hover{border-color:var(--silver);color:var(--ve);}
+
+/* ── COUNTDOWN ── */
+.countdown-section{background:var(--frost2);padding:60px 48px;text-align:center;position:relative;overflow:hidden;border-bottom:.5px solid rgba(184,200,224,0.06);}
+.countdown-section::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:500px;height:300px;background:radial-gradient(ellipse,rgba(184,200,224,0.04) 0%,transparent 65%);pointer-events:none;}
+.cd-eye{font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--silver);opacity:.4;margin-bottom:10px;position:relative;z-index:2;}
+.cd-title{font-family:'Playfair Display',serif;font-size:clamp(18px,3vw,28px);font-weight:700;color:var(--silver2);margin-bottom:8px;position:relative;z-index:2;}
+.cd-title em{color:var(--ve);font-style:italic;}
+.cd-date{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px;color:rgba(184,200,224,0.4);margin-bottom:32px;position:relative;z-index:2;}
+.cd-blocks{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;position:relative;z-index:2;}
+.cd-block{background:rgba(255,255,255,0.03);border:.5px solid rgba(184,200,224,0.1);padding:20px 28px;min-width:90px;display:flex;flex-direction:column;align-items:center;gap:6px;}
+.cd-num{font-family:'Playfair Display',serif;font-size:clamp(32px,5vw,52px);font-weight:700;color:var(--ve);line-height:1;}
+.cd-label{font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--deep);opacity:.8;}
+.cd-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13px;color:rgba(184,200,224,0.35);margin-top:24px;position:relative;z-index:2;}
+
+/* ── SCRIPTURE BAND ── */
+.sb{background:var(--parch);padding:22px 48px;display:flex;align-items:center;justify-content:center;gap:16px;border-top:.5px solid rgba(90,138,80,0.15);border-bottom:.5px solid rgba(90,138,80,0.15);flex-wrap:wrap;}
+.sd{width:4px;height:4px;border-radius:50%;background:var(--sage);}
+.sd.d2{opacity:.5;}.sd.d3{opacity:.2;}
+.sv{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;color:var(--warm);text-align:center;letter-spacing:.04em;}
+
+/* ── MORNING AFFIRMATIONS ── */
+.affirmations-section{background:var(--frost);padding:90px 48px;position:relative;overflow:hidden;}
+.affirmations-section::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:400px;background:radial-gradient(ellipse,rgba(74,88,120,0.15) 0%,transparent 65%);pointer-events:none;}
+.aff-inner{max-width:640px;margin:0 auto;text-align:center;position:relative;z-index:2;}
+.aff-eye{font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--silver);opacity:.45;margin-bottom:14px;}
+.aff-title{font-family:'Playfair Display',serif;font-size:clamp(28px,4.5vw,56px);font-weight:700;color:var(--silver2);line-height:.95;margin-bottom:14px;}
+.aff-title em{color:var(--ve);font-style:italic;}
+.aff-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:16px;color:rgba(184,200,224,0.42);line-height:1.85;margin-bottom:12px;}
+.aff-quote{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;color:rgba(184,200,224,0.5);margin-bottom:28px;line-height:1.7;}
+.aff-sample{background:rgba(255,255,255,0.03);border:.5px solid rgba(184,200,224,0.1);border-left:2px solid var(--ve);padding:20px 28px;margin:28px auto;max-width:480px;text-align:left;}
+.aff-sample-label{font-size:8px;letter-spacing:.18em;text-transform:uppercase;color:var(--ve);opacity:.7;margin-bottom:8px;font-family:'Jost',sans-serif;}
+.aff-sample-text{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:17px;color:var(--silver2);line-height:1.7;}
+.aff-sample-ref{font-size:10px;color:var(--deep);margin-top:8px;letter-spacing:.06em;}
+.aff-form{display:flex;gap:8px;max-width:420px;margin:0 auto 10px;}
+.aff-input{flex:1;padding:14px 16px;background:rgba(255,255,255,0.06);border:.5px solid rgba(184,200,224,0.2);color:var(--silver2);font-size:13px;font-family:'Jost',sans-serif;border-radius:0;outline:none;transition:border-color .2s;}
+.aff-input::placeholder{color:rgba(184,200,224,0.3);}
+.aff-input:focus{border-color:rgba(184,200,224,0.45);}
+.aff-btn{background:var(--ve);color:var(--frost);padding:14px 22px;border:none;cursor:pointer;font-size:10px;letter-spacing:.12em;text-transform:uppercase;font-family:'Jost',sans-serif;font-weight:500;white-space:nowrap;transition:all .2s;}
+.aff-btn:hover{background:var(--silver2);}
+.aff-note{font-size:10px;color:rgba(184,200,224,0.25);font-family:'Cormorant Garamond',serif;font-style:italic;}
+.aff-time{font-size:10px;color:rgba(184,200,224,0.3);margin-top:6px;letter-spacing:.06em;}
+.success-msg{display:none;text-align:center;padding:14px;background:rgba(90,138,80,0.08);border:.5px solid rgba(90,138,80,0.2);margin-top:12px;max-width:420px;margin-left:auto;margin-right:auto;}
+.success-msg p{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px;color:var(--sage2);}
+
+/* ── PDF BOX ── */
+.pdf-section{background:var(--oat);padding:80px 48px;position:relative;overflow:hidden;}
+.pdf-section::before{content:'';position:absolute;bottom:-60px;left:-60px;width:400px;height:400px;background:radial-gradient(circle,rgba(200,150,10,0.04) 0%,transparent 65%);pointer-events:none;}
+.pdf-inner{max-width:860px;margin:0 auto;}
+.pdf-eye{font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);opacity:.7;margin-bottom:12px;text-align:center;}
+.pdf-title{font-family:'Playfair Display',serif;font-size:clamp(26px,4vw,46px);font-weight:700;color:#2A1208;text-align:center;line-height:1;margin-bottom:10px;}
+.pdf-title em{color:var(--gold);font-style:italic;}
+.pdf-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:16px;color:var(--warm);text-align:center;max-width:520px;margin:0 auto 40px;line-height:1.8;}
+.pdf-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:780px;margin:0 auto;}
+.pdf-card{background:var(--parch);border:.5px solid rgba(200,150,10,0.2);padding:2rem;position:relative;overflow:hidden;}
+.pdf-card::after{content:'';position:absolute;inset:6px;border:.5px solid rgba(200,150,10,0.08);pointer-events:none;}
+.pdf-card-eye{font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);opacity:.65;margin-bottom:10px;font-family:'Jost',sans-serif;}
+.pdf-card-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:#2A1208;margin-bottom:8px;line-height:1.15;}
+.pdf-card-title em{color:var(--gold);font-style:italic;}
+.pdf-card-price{font-family:'Playfair Display',serif;font-size:36px;font-weight:700;color:var(--gold);margin-bottom:12px;line-height:1;}
+.pdf-card-desc{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px;color:var(--warm);line-height:1.8;margin-bottom:20px;}
+.pdf-card-list{list-style:none;margin-bottom:20px;}
+.pdf-card-list li{font-size:11px;color:rgba(42,18,8,0.55);padding:5px 0;border-bottom:.5px solid rgba(200,150,10,0.1);letter-spacing:.04em;display:flex;align-items:center;gap:8px;}
+.pdf-card-list li::before{content:'·';color:var(--gold);font-size:16px;}
+.pdf-btn{width:100%;padding:13px;background:var(--frost);color:var(--silver);font-size:10px;letter-spacing:.12em;text-transform:uppercase;border:none;cursor:pointer;font-family:'Jost',sans-serif;font-weight:500;transition:all .2s;}
+.pdf-btn:hover{background:var(--deep);color:var(--ve);}
+.pdf-btn.gold{background:var(--gold);color:var(--frost);}
+.pdf-btn.gold:hover{background:#E8B830;}
+.pdf-note{font-size:10px;color:rgba(42,18,8,0.3);text-align:center;margin-top:24px;font-family:'Cormorant Garamond',serif;font-style:italic;}
+
+/* ── CARDS ── */
+.cards-section{background:var(--cream);padding:100px 48px;position:relative;overflow:hidden;}
+.cards-section::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:700px;height:700px;background:radial-gradient(ellipse,rgba(201,147,154,0.04) 0%,transparent 60%);pointer-events:none;}
+.section-eye{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--rose);opacity:.7;margin-bottom:10px;text-align:center;}
+.section-title{font-family:'Playfair Display',serif;font-size:clamp(28px,4.5vw,52px);font-weight:700;color:#2A1208;text-align:center;line-height:1;margin-bottom:6px;}
+.section-title em{color:var(--rose);font-style:italic;}
+.section-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:16px;color:var(--warm);text-align:center;margin-bottom:56px;line-height:1.7;}
+.cards-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:960px;margin:0 auto;}
+.card{background:var(--parch);border:.5px solid rgba(201,147,154,0.22);padding:2.5rem 2rem;position:relative;overflow:hidden;text-align:center;opacity:0;transform:translateY(28px);transition:opacity .65s ease,transform .65s ease,box-shadow .3s;}
+.card.in{opacity:1;transform:translateY(0);}
+.card:hover{box-shadow:0 18px 50px rgba(42,18,8,0.08);}
+.card::before{content:'';position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;}
+.card::after{content:'';position:absolute;inset:7px;border:.5px solid rgba(201,147,154,0.1);pointer-events:none;}
+.card:nth-child(2){transition-delay:.18s;}.card:nth-child(3){transition-delay:.35s;}
+.card-roman{font-family:'Playfair Display',serif;font-size:42px;font-style:italic;color:var(--rose);opacity:.18;line-height:1;margin-bottom:12px;position:relative;z-index:2;}
+.card-label{font-size:8px;letter-spacing:.22em;text-transform:uppercase;color:var(--rose);opacity:.7;margin-bottom:10px;font-family:'Jost',sans-serif;position:relative;z-index:2;}
+.card-rule{width:28px;height:.5px;background:linear-gradient(to right,transparent,rgba(201,147,154,0.45),transparent);margin:0 auto 14px;position:relative;z-index:2;}
+.card-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:#2A1208;line-height:1.15;margin-bottom:12px;position:relative;z-index:2;}
+.card-title em{font-style:italic;color:var(--rose);}
+.card-text{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px;color:var(--warm);line-height:1.85;position:relative;z-index:2;}
+.card-text em{font-style:normal;color:var(--sage);font-weight:600;}
+.card-foot{margin-top:16px;padding-top:13px;border-top:.5px solid rgba(201,147,154,0.15);position:relative;z-index:2;}
+.card-detail{font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--rose);opacity:.6;font-family:'Jost',sans-serif;}
+.cards-cta{text-align:center;margin-top:48px;}
+.cards-cta p{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:16px;color:var(--warm);margin-bottom:20px;}
+.btn-dark{background:var(--frost);color:var(--silver);font-size:11px;letter-spacing:.14em;text-transform:uppercase;padding:15px 32px;border:none;cursor:pointer;font-family:'Jost',sans-serif;font-weight:500;transition:all .2s;}
+.btn-dark:hover{background:var(--deep);color:var(--ve);}
+.cards-cta small{display:block;font-size:11px;color:rgba(42,18,8,0.3);margin-top:10px;font-family:'Cormorant Garamond',serif;font-style:italic;}
+
+/* ── EXPERIENCE ── */
+.experience{background:var(--frost);padding:90px 48px;position:relative;overflow:hidden;}
+.experience::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:400px;background:radial-gradient(ellipse,rgba(74,88,120,0.12) 0%,transparent 65%);pointer-events:none;}
+.exp-eye{font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--silver);opacity:.5;margin-bottom:12px;text-align:center;position:relative;z-index:2;}
+.exp-title{font-family:'Playfair Display',serif;font-size:clamp(26px,4vw,48px);font-weight:700;color:var(--silver2);text-align:center;line-height:1;margin-bottom:10px;position:relative;z-index:2;}
+.exp-title em{color:var(--ve);font-style:italic;}
+.exp-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:16px;color:rgba(184,200,224,0.42);text-align:center;max-width:540px;margin:0 auto 48px;line-height:1.85;position:relative;z-index:2;}
+.exp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;max-width:900px;margin:0 auto;position:relative;z-index:2;}
+.exp-card{background:rgba(255,255,255,0.03);border:.5px solid rgba(184,200,224,0.08);padding:1.75rem 1.5rem;text-align:center;}
+.exp-num{font-family:'Playfair Display',serif;font-size:34px;font-style:italic;color:var(--silver);opacity:.14;line-height:1;margin-bottom:10px;}
+.exp-name{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--silver2);margin-bottom:8px;line-height:1.2;}
+.exp-name em{font-style:italic;color:var(--ve);}
+.exp-body{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13px;color:rgba(184,200,224,0.4);line-height:1.85;}
+
+/* ── ABOUT ── */
+.about{background:var(--oat);padding:90px 48px;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;position:relative;overflow:hidden;}
+.about::before{content:'';position:absolute;bottom:-80px;right:-80px;width:400px;height:400px;background:radial-gradient(circle,rgba(90,138,80,0.06) 0%,transparent 65%);pointer-events:none;}
+.ab-eye{font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--sage);opacity:.6;margin-bottom:12px;}
+.ab-title{font-family:'Playfair Display',serif;font-size:clamp(26px,3.5vw,46px);font-weight:700;color:#2A1208;line-height:1;margin-bottom:18px;}
+.ab-title em{color:var(--sage);font-style:italic;}
+.ab-body{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:16px;color:rgba(42,18,8,0.52);line-height:1.9;margin-bottom:14px;}
+.ab-body em{color:var(--sage);font-style:normal;}
+.ab-sign{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;color:var(--sage);opacity:.62;margin-top:22px;}
+.mystery-card{background:var(--parch);border:.5px solid rgba(201,147,154,0.2);padding:2.5rem;text-align:center;position:relative;overflow:hidden;}
+.mystery-card::before{content:'';position:absolute;inset:8px;border:.5px solid rgba(201,147,154,0.08);pointer-events:none;}
+.mc-verse{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;color:var(--warm);line-height:1.85;margin-bottom:14px;}
+.mc-rule{width:28px;height:.5px;background:rgba(201,147,154,0.25);margin:0 auto 12px;}
+.mc-small{font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:rgba(201,147,154,0.4);font-family:'Jost',sans-serif;}
+
+/* ── COMING SOON / WAITLIST ── */
+.coming{background:var(--parch);padding:90px 48px;text-align:center;position:relative;overflow:hidden;}
+.coming::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:400px;background:radial-gradient(ellipse,rgba(232,192,190,0.1) 0%,transparent 65%);pointer-events:none;}
+.date-ghost{font-family:'Playfair Display',serif;font-size:clamp(60px,10vw,130px);font-weight:700;color:#2A1208;opacity:.05;position:absolute;bottom:-15px;left:50%;transform:translateX(-50%);white-space:nowrap;pointer-events:none;z-index:1;}
+.cs-eye{font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--rose);opacity:.7;margin-bottom:12px;position:relative;z-index:2;}
+.cs-badge{display:inline-flex;align-items:center;gap:8px;background:var(--frost);color:var(--silver);padding:9px 22px;margin-bottom:24px;font-size:10px;letter-spacing:.2em;text-transform:uppercase;font-family:'Jost',sans-serif;font-weight:500;position:relative;z-index:2;}
+.cs-dot{width:5px;height:5px;border-radius:50%;background:var(--rose);animation:dotP 1.5s ease-in-out infinite;}
+@keyframes dotP{0%,100%{opacity:.4}50%{opacity:1}}
+.cs-title{font-family:'Playfair Display',serif;font-size:clamp(30px,5vw,60px);font-weight:700;color:#2A1208;line-height:.95;margin-bottom:12px;position:relative;z-index:2;}
+.cs-title em{color:var(--rose);font-style:italic;}
+.cs-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:16px;color:var(--warm);line-height:1.8;max-width:500px;margin:0 auto 28px;position:relative;z-index:2;}
+.cs-form{display:flex;gap:8px;max-width:420px;margin:0 auto;position:relative;z-index:2;flex-wrap:wrap;}
+.cs-input{flex:1;min-width:180px;padding:13px 15px;background:rgba(255,255,255,0.65);border:.5px solid rgba(201,147,154,0.28);color:#2A1208;font-size:12px;font-family:'Jost',sans-serif;border-radius:0;}
+.cs-input::placeholder{color:rgba(42,18,8,0.28);}
+.cs-input:focus{outline:none;border-color:rgba(201,147,154,0.52);}
+.cs-btn{background:var(--frost);color:var(--silver);padding:13px 20px;border:none;cursor:pointer;font-size:10px;letter-spacing:.12em;text-transform:uppercase;font-family:'Jost',sans-serif;font-weight:500;white-space:nowrap;transition:background .2s;}
+.cs-btn:hover{background:var(--deep);}
+.cs-note{font-size:10px;color:rgba(42,18,8,0.32);margin-top:10px;font-family:'Cormorant Garamond',serif;font-style:italic;position:relative;z-index:2;}
+
+/* ── FOOTER ── */
+footer{background:var(--ink);padding:40px 48px;display:flex;flex-direction:column;align-items:center;gap:12px;border-top:.5px solid rgba(184,200,224,0.05);}
+.f-logo{font-family:'Playfair Display',serif;font-size:22px;letter-spacing:.22em;color:var(--thry);}
+.f-logo .ve{color:var(--ve);}
+.f-pillars{font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:rgba(184,200,224,0.18);}
+.f-verse{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:12px;color:rgba(184,200,224,0.13);}
+.f-copy{font-size:10px;color:rgba(184,200,224,0.09);letter-spacing:.06em;}
+
+/* ── MODAL ── */
+.overlay{position:fixed;inset:0;z-index:500;background:rgba(8,6,16,0.9);backdrop-filter:blur(12px);display:none;align-items:center;justify-content:center;padding:2rem;}
+.overlay.open{display:flex;}
+.modal{background:var(--parch);padding:2.75rem;max-width:440px;width:100%;border:.5px solid rgba(201,147,154,0.22);position:relative;animation:mIn .3s cubic-bezier(.16,1,.3,1);max-height:90vh;overflow-y:auto;}
+.modal::before{content:'';position:absolute;inset:8px;border:.5px solid rgba(201,147,154,0.08);pointer-events:none;}
+@keyframes mIn{from{opacity:0;transform:translateY(20px) scale(.97)}to{opacity:1;transform:none}}
+.m-close{position:absolute;top:14px;right:18px;font-size:20px;color:rgba(42,18,8,0.28);cursor:pointer;background:none;border:none;line-height:1;}
+.m-close:hover{color:#2A1208;}
+.m-eye{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--rose);opacity:.6;margin-bottom:10px;font-family:'Jost',sans-serif;}
+.m-title{font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:#2A1208;margin-bottom:8px;line-height:1.15;}
+.m-title em{color:var(--rose);font-style:italic;}
+.m-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px;color:var(--warm);line-height:1.8;margin-bottom:18px;}
+.m-field{width:100%;padding:12px 15px;background:rgba(255,255,255,0.6);border:.5px solid rgba(201,147,154,0.22);color:#2A1208;font-size:12px;font-family:'Jost',sans-serif;margin-bottom:9px;border-radius:0;}
+.m-field::placeholder{color:rgba(42,18,8,0.28);}
+.m-field:focus{outline:none;border-color:rgba(201,147,154,0.48);}
+.m-btn{width:100%;padding:14px;background:var(--frost);color:var(--silver);font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:500;border:none;cursor:pointer;font-family:'Jost',sans-serif;margin-top:4px;transition:background .2s;}
+.m-btn:hover{background:var(--deep);}
+.m-note{font-size:10px;color:rgba(42,18,8,0.28);text-align:center;margin-top:10px;font-family:'Cormorant Garamond',serif;font-style:italic;}
+
+@media(max-width:768px){
+  nav{padding:14px 22px;}.nav-links{display:none;}
+  .hero,.about,.coming,.sb,.experience,.affirmations-section,.pdf-section,footer{padding-left:22px;padding-right:22px;}
+  .cards-section{padding:60px 22px;}.cards-grid,.exp-grid,.pdf-grid{grid-template-columns:1fr;}
+  .about{grid-template-columns:1fr;gap:40px;}
+  .cs-form,.aff-form{flex-direction:column;}
+  .cd-blocks{gap:10px;}.cd-block{min-width:70px;padding:16px 20px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ PORTAL ══ -->
+<div id="portal">
+  <div class="aff-wall">
+    <span style="top:3%;left:2%;font-size:12px;opacity:.28;transform:rotate(-1.5deg);">You are enough</span>
+    <span style="top:7%;right:4%;font-size:9px;opacity:.15;transform:rotate(1deg);">You are chosen</span>
+    <span style="top:12%;left:11%;font-size:11px;opacity:.16;transform:rotate(-1deg);">You are healing</span>
+    <span style="top:17%;right:8%;font-size:8px;opacity:.13;">You are seen</span>
+    <span style="top:22%;left:3%;font-size:13px;opacity:.17;transform:rotate(-2deg);">You are worthy</span>
+    <span style="top:27%;right:13%;font-size:9px;opacity:.14;transform:rotate(.5deg);">You are loved</span>
+    <span style="top:32%;left:7%;font-size:11px;opacity:.15;transform:rotate(-1deg);">You are perfect</span>
+    <span style="top:37%;right:2%;font-size:8px;opacity:.13;">You are becoming</span>
+    <span style="top:42%;left:1%;font-size:10px;opacity:.16;transform:rotate(-1.5deg);">You are not alone</span>
+    <span style="top:47%;right:9%;font-size:9px;opacity:.14;transform:rotate(1.5deg);">You are stronger</span>
+    <span style="top:52%;left:13%;font-size:12px;opacity:.15;transform:rotate(-.5deg);">You are royal</span>
+    <span style="top:57%;right:4%;font-size:8px;opacity:.13;">You are protected</span>
+    <span style="top:62%;left:4%;font-size:11px;opacity:.16;transform:rotate(-2deg);">You are whole</span>
+    <span style="top:67%;right:11%;font-size:9px;opacity:.14;transform:rotate(1deg);">You are still here</span>
+    <span style="top:72%;left:8%;font-size:12px;opacity:.15;transform:rotate(-.5deg);">You are capable</span>
+    <span style="top:77%;right:5%;font-size:8px;opacity:.13;">You are a gift</span>
+    <span style="top:82%;left:2%;font-size:10px;opacity:.15;transform:rotate(-1deg);">You are deserving</span>
+    <span style="top:87%;right:8%;font-size:9px;opacity:.14;transform:rotate(2deg);">You are known</span>
+    <span style="top:92%;left:10%;font-size:11px;opacity:.15;transform:rotate(-.5deg);">You are enough</span>
+  </div>
+  <div class="p-glow"></div>
+  <div class="p-glow2"></div>
+  <div class="gate" id="gate" onclick="openPortal()">
+    <svg style="position:absolute;inset:0;" viewBox="0 0 168 226" fill="none">
+      <path d="M 9 226 L 9 84 Q 9 9 84 9 Q 159 9 159 84 L 159 226" stroke="#252B3A" stroke-width="1.2" opacity=".8"/>
+      <path d="M 18 226 L 18 86 Q 18 20 84 20 Q 150 20 150 86 L 150 226" stroke="#B8C8E0" stroke-width="0.8" id="archS"/>
+      <path d="M 27 226 L 27 88 Q 27 31 84 31 Q 141 31 141 88 L 141 226" stroke="#D8E4F0" stroke-width="0.3" opacity=".16"/>
+      <path d="M 84 5 L 89 10 L 84 15 L 79 10 Z" fill="#B8C8E0" opacity=".58"/>
+      <path d="M 7 7 L 19 7 L 19 14" fill="none" stroke="#B8C8E0" stroke-width="0.5" opacity=".2"/>
+      <path d="M 161 7 L 149 7 L 149 14" fill="none" stroke="#B8C8E0" stroke-width="0.5" opacity=".2"/>
+    </svg>
+    <div class="gate-content">
+      <svg width="46" height="20" viewBox="0 0 46 20" style="display:block;margin:0 auto 10px;">
+        <path d="M 23 20 Q 21 13 15 7 Q 9 2 4 1" fill="none" stroke="#4A5878" stroke-width=".7" opacity=".36"/>
+        <path d="M 23 20 Q 25 13 31 7 Q 37 2 42 1" fill="none" stroke="#4A5878" stroke-width=".7" opacity=".36"/>
+        <ellipse cx="11" cy="6" rx="5" ry="2" fill="#4A5878" opacity=".24" transform="rotate(-28 11 6)"/>
+        <ellipse cx="35" cy="6" rx="5" ry="2" fill="#4A5878" opacity=".24" transform="rotate(28 35 6)"/>
+        <circle cx="23" cy="3" r="2.5" fill="#B8C8E0" opacity=".34"/>
+      </svg>
+      <p class="gate-logo">THRY<span class="ve">VE</span></p>
+      <div class="gate-rule"></div>
+      <p class="gate-sub">Wellness</p>
+    </div>
+  </div>
+  <p class="gate-prompt" onclick="openPortal()">Enter when you are ready.</p>
+</div>
+
+<!-- ══ SITE ══ -->
+<div id="site">
+
+<nav>
+  <div class="nav-logo"><span>THRY</span><span class="ve">VE</span></div>
+  <div class="nav-links">
+    <a href="#affirmations">Morning Affirmations</a>
+    <a href="#cards">The Journal</a>
+    <a href="#about">The Founder</a>
+    <a href="#coming">Waitlist</a>
+  </div>
+  <button class="nav-cta" onclick="openModal()">Join the Waitlist</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <p class="h-eye">THRYVE Athletics · Presents</p>
+    <h1 class="h-title">A journal built<br/>for every person<br/><em>doing the work.</em></h1>
+    <p class="h-body">Not a gift shop journal.<br/>A <em>90-day healing correspondence</em> —<br/>sealed, delivered, and waiting for the one<br/>for whom it was made.</p>
+    <div class="h-ctas">
+      <button class="btn-silver" onclick="document.getElementById('affirmations').scrollIntoView({behavior:'smooth'})">Start Your Morning ↓</button>
+      <button class="btn-ghost" onclick="openModal()">Reserve Your Copy</button>
+    </div>
+  </div>
+</section>
+
+<!-- COUNTDOWN -->
+<div style="background:var(--frost);padding:12px 48px;text-align:center;border-bottom:.5px solid rgba(184,200,224,0.06);">
+  <p style="font-family:'Playfair Display',serif;font-size:clamp(13px,2vw,18px);color:rgba(184,200,224,0.5);letter-spacing:.1em;font-style:italic;">July 18th · The Healing Journal drops.</p>
+</div>
+<div class="countdown-section">
+  <p class="cd-eye">The journal drops in</p>
+  <h2 class="cd-title">July <em>18th</em> is almost here.</h2>
+  <p class="cd-date">Be on the list when the doors open.</p>
+  <div class="cd-blocks">
+    <div class="cd-block"><span class="cd-num" id="cd-days">--</span><span class="cd-label">Days</span></div>
+    <div class="cd-block"><span class="cd-num" id="cd-hours">--</span><span class="cd-label">Hours</span></div>
+    <div class="cd-block"><span class="cd-num" id="cd-mins">--</span><span class="cd-label">Minutes</span></div>
+    <div class="cd-block"><span class="cd-num" id="cd-secs">--</span><span class="cd-label">Seconds</span></div>
+  </div>
+  <p class="cd-sub">"The season's most anticipated arrival is nearly upon us."</p>
+</div>
+
+<!-- SCRIPTURE BAND -->
+<div class="sb">
+  <div class="sd"></div><div class="sd d2"></div><div class="sd d3"></div>
+  <p class="sv">"I can do all things through Christ who strengthens me." · Philippians 4:13</p>
+  <div class="sd d3"></div><div class="sd d2"></div><div class="sd"></div>
+</div>
+
+<!-- MORNING AFFIRMATIONS -->
+<section class="affirmations-section" id="affirmations">
+  <div class="aff-inner">
+    <p class="aff-eye">THRYVE Athletics · Free Daily Text</p>
+    <h2 class="aff-title">Start your morning<br/>with <em>the truth.</em></h2>
+    <p class="aff-sub">On the days you don't want to show up — we show up for you. Every morning at 7AM a scripture and an affirmation arrives in your pocket. Free. Always.</p>
+    <p class="aff-quote">"We lift you up on the days you don't want to."</p>
+    <div class="aff-sample">
+      <p class="aff-sample-label">This morning's affirmation</p>
+      <p class="aff-sample-text" id="dailyAff">You are not what happened to you. You are what you choose to become.</p>
+      <p class="aff-sample-ref" id="dailyVerse">"I can do all things through Christ who strengthens me." · Phil 4:13</p>
+    </div>
+    <div class="aff-form">
+      <input class="aff-input" type="tel" placeholder="Your phone number" id="affPhone"/>
+      <button class="aff-btn" onclick="signupAff()">Text Me Daily ↗</button>
+    </div>
+    <div class="success-msg" id="affSuccess">
+      <p>You are on the list. Your first affirmation arrives tomorrow morning at 7AM. ✨</p>
+    </div>
+    <p class="aff-note">Free always · Text STOP to unsubscribe at any time</p>
+    <p class="aff-time">Delivered at 7:00 AM · Every morning</p>
+  </div>
+</section>
+
+<!-- PDF PURCHASE BOX -->
+<section class="pdf-section" id="pdf">
+  <div class="pdf-inner">
+    <p class="pdf-eye">THRYVE Athletics · The Healing Journal</p>
+    <h2 class="pdf-title">Start now or<br/>start <em>fully.</em></h2>
+    <p class="pdf-sub">The 30-day PDF gives you Month One — Identity. The full 90-day hard copy gives you everything. Same journal. One has the four letters, the scroll, and the ceremony.</p>
+    <div class="pdf-grid">
+
+      <!-- PDF CARD -->
+      <div class="pdf-card">
+        <p class="pdf-card-eye">Digital · Instant delivery</p>
+        <h3 class="pdf-card-title">30-Day <em>Preview</em></h3>
+        <p class="pdf-card-price">$17</p>
+        <p class="pdf-card-desc">Month One — Identity. Thirty days of daily check-ins, four weekly deep dives, and the self-inventory. Yours instantly. Start tonight.</p>
+        <ul class="pdf-card-list">
+          <li>Month One · Identity · 30 days</li>
+          <li>4 weekly deep dive sessions</li>
+          <li>Digital · any device · instant</li>
+          <li>Personalized · your name on every page</li>
+        </ul>
+        <button class="pdf-btn" onclick="window.open('YOUR_PAYHIP_LINK_HERE','_blank')">Get the PDF — $17 →</button>
+      </div>
+
+      <!-- HARD COPY CARD -->
+      <div class="pdf-card">
+        <p class="pdf-card-eye">Hard copy · Ships July 18th</p>
+        <h3 class="pdf-card-title">The Full <em>90 Days</em></h3>
+        <p class="pdf-card-price">$47</p>
+        <p class="pdf-card-desc">The complete healing journal. All three months. All four letters. The scroll. The ceremony. The oat hardcover in your hands.</p>
+        <ul class="pdf-card-list">
+          <li>Full 90 days · 3 months · 4 letters</li>
+          <li>Oat matte hardcover · gold detail</li>
+          <li>Founder scroll enclosed</li>
+          <li>Ships July 18th · pre-order now</li>
+        </ul>
+        <button class="pdf-btn gold" onclick="openModal()">Pre-Order — $47 + shipping →</button>
+      </div>
+
+    </div>
+    <p class="pdf-note">"The 30-day PDF is where it begins. The hard copy is where it lives." · thryvewellnessco.com</p>
+  </div>
+</section>
+
+<!-- THREE CARDS -->
+<section class="cards-section" id="cards">
+  <p class="section-eye">Three things you must know</p>
+  <h2 class="section-title">Before you <em>decide.</em></h2>
+  <p class="section-sub">Read all three. In order. Then decide whether you are ready.</p>
+  <div class="cards-grid">
+    <div class="card" id="card1">
+      <p class="card-roman">I</p>
+      <p class="card-label">What it is</p>
+      <div class="card-rule"></div>
+      <h3 class="card-title">A <em>ninety-day</em><br/>correspondence.</h3>
+      <p class="card-text">Three layers. Ninety days.<br/><br/>A daily check-in for those who have never been asked how they are actually doing.<br/><br/>A weekly deep dive for those carrying something never yet said aloud.<br/><br/>And four letters — to yourself, to someone in heaven, to your mother, to the one you used to be — that shall ask more of you than anything else within these pages.<br/><br/><em>This is not a decorative journal. This is the work.</em></p>
+      <div class="card-foot"><p class="card-detail">90 days · 3 layers · 4 letters</p></div>
+    </div>
+    <div class="card" id="card2">
+      <p class="card-roman">II</p>
+      <p class="card-label">Who it is for</p>
+      <div class="card-rule"></div>
+      <h3 class="card-title">The ones doing<br/>the <em>real work.</em></h3>
+      <p class="card-text">Gentlemen who were never extended the grace of feeling it.<br/><br/>Ladies who have poured into every soul but their own until nothing remained.<br/><br/>Any person who has survived something they have never fully reckoned with.<br/><br/><em>Every size. Every complexion. Every story.</em></p>
+      <div class="card-foot"><p class="card-detail">For every person · Without exception · Built for all</p></div>
+    </div>
+    <div class="card" id="card3">
+      <p class="card-roman">III</p>
+      <p class="card-label">Why the hard copy</p>
+      <div class="card-rule"></div>
+      <h3 class="card-title">The experience<br/>begins at the <em>seal.</em></h3>
+      <p class="card-text">It arrives sealed. What is inside was chosen with intention — for the person who is ready to do the real work. The journal. The scroll. Everything you need to begin.<br/><br/><em>A PDF delivers the content. The hard copy delivers the ceremony.</em></p>
+      <div class="card-foot"><p class="card-detail">Oat matte hardcover · Ships sealed · Scroll enclosed</p></div>
+    </div>
+  </div>
+  <div class="cards-cta">
+    <p>"The 30-day PDF gives you Month One. The full 90-day hard copy gives you everything. Both are the same journal. Only one has the four letters, the scroll, and the ceremony."</p>
+    <button class="btn-dark" onclick="openModal()">Reserve the Hard Copy — $47 + shipping →</button>
+    <small>30-Day PDF Preview · $17 · Digital · Instant · Month One only</small>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section class="experience" id="experience">
+  <p class="exp-eye">What arrives at your door</p>
+  <h2 class="exp-title">The ceremony begins<br/>before you <em>open it.</em></h2>
+  <p class="exp-sub">"Every element was considered. Every layer is an act of intention."</p>
+  <div class="exp-grid">
+    <div class="exp-card">
+      <p class="exp-num">I</p>
+      <h3 class="exp-name">The <em>Arrival</em></h3>
+      <p class="exp-body">Plain on the exterior. Intentionally so. It arrives looking like something important — with nothing to prove before it is opened.</p>
+    </div>
+    <div class="exp-card">
+      <p class="exp-num">II</p>
+      <h3 class="exp-name">The <em>Scroll</em></h3>
+      <p class="exp-body">A founder letter. Personal. Addressed to you. The first thing you reach for. It lives in the back pocket of the journal — for the days you need to read it again.</p>
+    </div>
+    <div class="exp-card">
+      <p class="exp-num">III</p>
+      <h3 class="exp-name">The <em>Journal</em></h3>
+      <p class="exp-body">Oat matte hardcover. THRYVE engraved. Ninety days of the most important work you will ever do — waiting for you to begin.</p>
+    </div>
+    <div class="exp-card">
+      <p class="exp-num">IV</p>
+      <h3 class="exp-name">The <em>Daily Work</em></h3>
+      <p class="exp-body">Every morning. Five minutes. Mind. Body. Soul. A check-in that asks how you are actually doing — and gives you space to answer honestly.</p>
+    </div>
+    <div class="exp-card">
+      <p class="exp-num">V</p>
+      <h3 class="exp-name">The <em>Deep Dives</em></h3>
+      <p class="exp-body">Once a week. Thirty minutes. Questions that go beneath the surface. The ones you have been avoiding. This is where the real work happens.</p>
+    </div>
+    <div class="exp-card">
+      <p class="exp-num">VI</p>
+      <h3 class="exp-name">The <em>Four Letters</em></h3>
+      <p class="exp-body">To yourself. To someone in heaven. To your mother. To who you used to be. The most important pages in the journal. They will ask everything of you.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div>
+    <p class="ab-eye">The founder</p>
+    <h2 class="ab-title">Built while<br/><em>healing.</em></h2>
+        <p class="ab-body">God needed a body. I became it.<br/><br/>I did not build this because I had it figured out. I built it because I was still figuring it out — and nothing like this existed for the person I was in the middle of it.</p>
+    <p class="ab-body">This journal is the map I wish someone had handed me. Built under THRYVE Athletics — because healing and movement and growth were <em>never separate things.</em> They were always the same thing.</p>
+    <p class="ab-body">I built it in faith. I released it in faith. And I offer it now to every person who has been carrying something that was never meant to be carried alone.</p>
+    <p class="ab-sign">— The Founder · THRYVE Athletics</p>
+  </div>
+  <div class="mystery-card">
+    <div class="mc-rule"></div>
+    <p class="mc-verse">"Before I formed you in the womb — I knew you."</p>
+    <div class="mc-rule"></div>
+    <p class="mc-verse" style="font-size:14px;">"She is clothed with strength and dignity."</p>
+    <div class="mc-rule"></div>
+    <p class="mc-verse" style="font-size:13px;">"For such a time as this."</p>
+    <div class="mc-rule"></div>
+    <p class="mc-small">THRYVE Wellness · Mind · Body · Soul</p>
+  </div>
+</section>
+
+<!-- WAITLIST -->
+<section class="coming" id="coming">
+  <p class="date-ghost">JULY 18</p>
+  <p class="cs-eye">THRYVE Athletics · The Healing Journal</p>
+  <div class="cs-badge"><span class="cs-dot"></span><span>Coming · July 18th 2026</span></div>
+  <h2 class="cs-title">Reserve your<br/><em>copy.</em></h2>
+  <p class="cs-sub">"Those on the list shall be the first to receive it — 24 hours before the public. Your place is being held."</p>
+  <div class="cs-form">
+    <input class="cs-input" type="text" placeholder="Your first name" id="wlName"/>
+    <input class="cs-input" type="email" placeholder="Your email address" id="wlEmail"/>
+    <button class="cs-btn" onclick="signupWaitlist()">Join the List →</button>
+  </div>
+  <div class="success-msg" id="wlSuccess" style="margin-top:12px;">
+    <p>You are on the list. First access — 24 hours before the public. Welcome to THRYVE. ✨</p>
+  </div>
+  <p class="cs-note">First access · 24 hours before the public · Always free to join</p>
+</section>
+
+<!-- SCRIPTURE BAND -->
+<div class="sb">
+  <div class="sd"></div><div class="sd d2"></div><div class="sd d3"></div>
+  <p class="sv">"I can do all things through Christ who strengthens me." · Philippians 4:13</p>
+  <div class="sd d3"></div><div class="sd d2"></div><div class="sd"></div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="f-logo"><span>THRY</span><span class="ve">VE</span></div>
+  <p class="f-pillars">Athletics · Mind · Body · Soul</p>
+  <p class="f-verse">"I can do all things through Christ who strengthens me." · Philippians 4:13</p>
+  <p class="f-copy">© 2026 THRYVE Athletics · thryvewellnessco.com · All rights reserved</p>
+</footer>
+
+</div>
+
+<!-- MODAL -->
+<div class="overlay" id="modal">
+  <div class="modal">
+    <button class="m-close" onclick="closeModal()">×</button>
+    <p class="m-eye">Reserve your copy</p>
+    <h3 class="m-title">Join the <em>Waitlist</em></h3>
+    <p class="m-sub">"Those who arrive first shall be most graciously attended to. First access — 24 hours before the public. Your place is being held."</p>
+    <input class="m-field" type="text" placeholder="Your first name"/>
+    <input class="m-field" type="email" placeholder="Your email address"/>
+    <input class="m-field" type="tel" placeholder="Phone — for daily affirmation texts (optional)"/>
+    <button class="m-btn">Reserve My Copy →</button>
+    <p class="m-note">Hard copy $47 + shipping · 30-Day PDF $17 · Launches July 18th 2026</p>
+  </div>
+</div>
+
+<script>
+// ARCH PULSE
+var st=document.createElement('style');
+st.textContent='#archS{animation:silP 3s ease-in-out infinite;}@keyframes silP{0%,100%{opacity:.3}50%{opacity:.62}}';
+document.head.appendChild(st);
+
+// PORTAL
+document.body.style.overflow='hidden';
+function openPortal(){
+  var gate=document.getElementById('gate');
+  var portal=document.getElementById('portal');
+  var site=document.getElementById('site');
+  gate.classList.add('opening');
+  setTimeout(function(){
+    portal.classList.add('gone');
+    site.classList.add('show');
+    document.body.style.overflow='';
+    setTimeout(function(){
+      var obs=new IntersectionObserver(function(entries){
+        entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('in');});
+      },{threshold:.12});
+      document.querySelectorAll('.card').forEach(function(c){obs.observe(c);});
+    },500);
+  },800);
+}
+
+// COUNTDOWN — July 18 2026
+function updateCountdown(){
+  var launch=new Date('July 18, 2026 00:00:00').getTime();
+  var now=new Date().getTime();
+  var diff=launch-now;
+  if(diff<=0){
+    ['cd-days','cd-hours','cd-mins','cd-secs'].forEach(function(id){document.getElementById(id).textContent='0';});
+    return;
+  }
+  var days=Math.floor(diff/(1000*60*60*24));
+  var hours=Math.floor((diff%(1000*60*60*24))/(1000*60*60));
+  var mins=Math.floor((diff%(1000*60*60))/(1000*60));
+  var secs=Math.floor((diff%(1000*60))/1000);
+  document.getElementById('cd-days').textContent=days;
+  document.getElementById('cd-hours').textContent=hours<10?'0'+hours:hours;
+  document.getElementById('cd-mins').textContent=mins<10?'0'+mins:mins;
+  document.getElementById('cd-secs').textContent=secs<10?'0'+secs:secs;
+}
+updateCountdown();
+setInterval(updateCountdown,1000);
+
+// ROTATING AFFIRMATIONS
+var affs=[
+  {text:'You are not what happened to you. You are what you choose to become.',verse:'"I can do all things through Christ who strengthens me." · Phil 4:13'},
+  {text:'You were made on purpose. Everything about you was intentional.',verse:'"Before I formed you in the womb I knew you." · Jeremiah 1:5'},
+  {text:'You are allowed to heal at your own pace. There is no deadline on becoming whole.',verse:'"He heals the brokenhearted and binds up their wounds." · Psalm 147:3'},
+  {text:'Rest is not weakness. It is how God restores what the world has taken.',verse:'"Be still and know that I am God." · Psalm 46:10'},
+  {text:'You are stronger than the thing that tried to break you.',verse:'"The Lord is close to the brokenhearted." · Psalm 34:18'},
+  {text:'Your healing is not just for you. It is for everyone who comes after you.',verse:'"For such a time as this." · Esther 4:14'},
+  {text:'The version of you that made it through the worst of it deserves to meet the best of it.',verse:''},
+  {text:'Everything you have been through was preparing you for everything you are about to step into.',verse:''},
+  {text:'You are not too much. You have just been around people who were not enough.',verse:''},
+];
+var affIdx=0;
+function rotateAff(){
+  var el=document.getElementById('dailyAff');
+  var vl=document.getElementById('dailyVerse');
+  if(!el||!vl)return;
+  el.style.opacity='0';vl.style.opacity='0';
+  setTimeout(function(){
+    affIdx=(affIdx+1)%affs.length;
+    el.textContent=affs[affIdx].text;
+    vl.textContent=affs[affIdx].verse;
+    el.style.transition='opacity .6s';vl.style.transition='opacity .6s';
+    el.style.opacity='1';vl.style.opacity='1';
+  },400);
+}
+setInterval(rotateAff,5000);
+
+// AFFIRMATION SIGNUP
+function signupAff(){
+  var phone=document.getElementById('affPhone').value.trim();
+  if(!phone){document.getElementById('affPhone').focus();return;}
+  document.getElementById('affPhone').value='';
+  document.getElementById('affSuccess').style.display='block';
+  setTimeout(function(){document.getElementById('affSuccess').style.display='none';},5000);
+}
+
+// WAITLIST SIGNUP
+function signupWaitlist(){
+  var name=document.getElementById('wlName').value.trim();
+  var email=document.getElementById('wlEmail').value.trim();
+  if(!name||!email){return;}
+  document.getElementById('wlName').value='';
+  document.getElementById('wlEmail').value='';
+  document.getElementById('wlSuccess').style.display='block';
+  setTimeout(function(){document.getElementById('wlSuccess').style.display='none';},5000);
+}
+
+// MODAL
+function openModal(){document.getElementById('modal').classList.add('open');document.body.style.overflow='hidden';}
+function closeModal(){document.getElementById('modal').classList.remove('open');document.body.style.overflow='';}
+document.getElementById('modal').addEventListener('click',function(e){if(e.target===this)closeModal();});
+</script>
+</body>
+</html>
